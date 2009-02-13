@@ -24,18 +24,12 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
-include_once( 'lib/ezdb/classes/ezdb.php' );
-include_once( 'kernel/classes/ezcontentobject.php' );
-include_once( 'kernel/classes/datatypes/ezuser/ezuser.php' );
-include_once( 'lib/ezfile/classes/ezfile.php' );
-include_once( 'lib/ezutils/classes/ezini.php' );
-
-$projectsIni =& eZINI::instance( 'ezprojects.ini' );
+$projectsIni = eZINI::instance( 'ezprojects.ini' );
 
 $filePath = $projectsIni->variable( 'Subversion', 'HTPasswdFile' );
 
-$contentObjectStatus = EZ_CONTENT_OBJECT_STATUS_PUBLISHED;
-$supportedHashTypes = array( EZ_USER_PASSWORD_HASH_PLAINTEXT, EZ_USER_PASSWORD_HASH_CRYPT );
+$contentObjectStatus = eZContentObject::STATUS_PUBLISHED;
+$supportedHashTypes = array( eZUser::PASSWORD_HASH_PLAINTEXT, eZUser::PASSWORD_HASH_CRYPT );
 
 $htpasswd = '';
 
@@ -49,7 +43,7 @@ $query = "SELECT ezuser.*
                     ezcontentobject.id = ezuser.contentobject_id AND
                     ezuser_setting.user_id = ezuser.contentobject_id";
 
-$db =& eZDB::instance();
+$db = eZDB::instance();
 $rows = $db->arrayQuery( $query );
 $rowCount = count( $rows );
 
@@ -71,7 +65,7 @@ foreach ( $rows as $row )
 
     switch( $row['password_hash_type'] )
     {
-        case EZ_USER_PASSWORD_HASH_CRYPT:
+        case eZUser::PASSWORD_HASH_CRYPT:
         {
             $passwordHash = $row['password_hash'];
         } break;

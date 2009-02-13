@@ -28,11 +28,9 @@ define( 'AUTHZ_SVN_ACCESS_DENY', 0 );
 define( 'AUTHZ_SVN_ACCESS_READ', 1 );
 define( 'AUTHZ_SVN_ACCESS_WRITE', 2 );
 
-require_once( 'lib/ezutils/classes/ezini.php' );
-
 class eZAuthzSVNAccessFile extends eZINI
 {
-    function &create( $fileName = "site.ini", $rootDir = "settings", $useTextCodec = null, $useCache = null, $useLocalOverrides = null )
+    static function create( $fileName = "site.ini", $rootDir = "settings", $useTextCodec = null, $useCache = null, $useLocalOverrides = null )
     {
         $impl = new eZAuthzSVNAccessFile( $fileName, $rootDir, $useTextCodec, $useCache, $useLocalOverrides );
         return $impl;
@@ -43,7 +41,7 @@ class eZAuthzSVNAccessFile extends eZINI
         $groups = array();
         if ( $this->hasGroup( 'groups' ) )
         {
-            $groupSettings =& $this->group( 'groups' );
+            $groupSettings = $this->group( 'groups' );
             foreach( $groupSettings as $groupName => $members )
             {
                 $groups[] = $groupName;
@@ -121,13 +119,12 @@ class eZAuthzSVNAccessFile extends eZINI
         return $this->authzSVNSetPolicy( $path, $userName, $policy, $repository );
     }
 
-    function &instance( $fileName = "site.ini", $rootDir = "settings", $useTextCodec = null, $useCache = null, $useLocalOverrides = null, $directAccess = false, $addArrayDefinition = false )
+    static function instance( $fileName = "site.ini", $rootDir = "settings", $useTextCodec = null, $useCache = null, $useLocalOverrides = null, $directAccess = false, $addArrayDefinition = false )
      {
          $impl =& $GLOBALS["eZINIGlobalInstance-$rootDir-$fileName-$useLocalOverrides"];
          $isLoaded =& $GLOBALS["eZINIGlobalIsLoaded-$rootDir-$fileName-$useLocalOverrides"];
 
-         $class = get_class( $impl );
-         if ( $class != "ezini" )
+         if ( !$impl instanceof eZINI )
          {
              $isLoaded = false;
 
@@ -138,7 +135,7 @@ class eZAuthzSVNAccessFile extends eZINI
          return $impl;
      }
 
-    function &fetchFromFile( $fileName, $useTextCodec = null )
+    static function fetchFromFile( $fileName, $useTextCodec = null )
     {
         $impl = new eZAuthzSVNAccessFile( $fileName, false, $useTextCodec, false, false, true );
         return $impl;

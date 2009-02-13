@@ -1,9 +1,6 @@
 <?php
 
-include_once( 'lib/ezdb/classes/ezdb.php' );
-include_once( 'kernel/classes/ezcontentobjecttreenode.php' );
-
-$db =& eZDB::instance();
+$db = eZDB::instance();
 $fileName = 'repositories.csv';
 $classIdentifier = 'subversion';
 
@@ -20,13 +17,16 @@ $dbMTime = $result[0]['last_modified'];
 $fileExists = file_exists( $fileName );
 
 $cli->output( 'last mod time in database: ' . $dbMTime );
-$cli->output( 'mod time of file: ' . filemtime( $fileName ) );
+if ( fileExists )
+{
+    $cli->output( 'mod time of file: ' . filemtime( $fileName ) );
+}
 
 if ( !$fileExists || $dbMTime > filemtime( $fileName ) )
 {
-    $repositories = eZContentObjectTreeNode::subTree( array( 'ClassFilterType' => 'include',
-                                                             'ClassFilterArray' => array( $classIdentifier ) ),
-					              2 );
+    $params = array( 'ClassFilterType' => 'include',
+                     'ClassFilterArray' => array( $classIdentifier ) );
+    $repositories = eZContentObjectTreeNode::subTreeByNodeID( $params, 2 );
 
     $cli->output( 'Repository objects found: ' . count( $repositories ) );
 
@@ -41,7 +41,7 @@ if ( !$fileExists || $dbMTime > filemtime( $fileName ) )
 
         if ( !$repoData['repository']->attribute( 'has_content' ) )
         {
-	    $cli->warning( 'repository object without link: ' . $repository->attribute( 'url_alias'  ));
+            $cli->warning( 'repository object without link: ' . $repository->attribute( 'url_alias'  ));
             continue;
         }
 

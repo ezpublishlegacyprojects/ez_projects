@@ -25,13 +25,8 @@
 //
 
 include_once( 'extension/ezprojects/classes/ezauthzsvnaccessfile.php' );
-include_once( 'kernel/classes/ezrole.php' );
-// don't remove this, eZRole doesn't include it when necessary
-include_once( 'kernel/classes/ezcontentobject.php' );
-include_once( 'kernel/classes/ezcontentobjecttreenode.php' );
-include_once( 'lib/ezutils/classes/ezini.php' );
 
-$projectsIni =& eZINI::instance( 'ezprojects.ini' );
+$projectsIni = eZINI::instance( 'ezprojects.ini' );
 
 $filePath = $projectsIni->variable( 'Subversion', 'AuthzSVNAccessFile' );
 
@@ -42,7 +37,7 @@ if ( file_exists( $filePath ) )
 }
 */
 
-$ini =& eZAuthzSVNAccessFile::create( $filePath, false, false );
+$ini = eZAuthzSVNAccessFile::create( $filePath, false, false );
 
 $svnRoles = $projectsIni->variable( 'Subversion', 'Roles' );
 $accessConfig = array();
@@ -70,12 +65,12 @@ foreach ( $svnRoles as $svnRole )
 }
 
 $userClasses = $projectsIni->hasVariable( 'Subversion', 'UserClasses' ) ? $projectsIni->variable( 'Subversion', 'UserClasses' ) : array( 'user' );
-$allwaysAddUsers = $projectsIni->variable( 'Subversion', 'AlwaysAddUsers' );
+$alwaysAddUsers = $projectsIni->variable( 'Subversion', 'AlwaysAddUsers' );
 
 foreach ( $accessConfig as $config )
 {
-    $role =& eZRole::fetch( $config['role_id'] );
-    $roleAssignments =& $role->fetchUserByRole();
+    $role = eZRole::fetch( $config['role_id'] );
+    $roleAssignments = $role->fetchUserByRole();
 
     foreach ( $roleAssignments as $assignment )
     {
@@ -104,7 +99,7 @@ foreach ( $accessConfig as $config )
                 'MainNodeOnly' => false
                 );
 
-            $users = eZContentObjectTreeNode::subTree( $subTreeParams, $groupNode->attribute( 'node_id' ) );
+            $users = $groupNode->subTree( $subTreeParams );
 
             $authzGroupName = 'subtree_' . $groupNode->attribute( 'node_id' );
 
@@ -114,16 +109,16 @@ foreach ( $accessConfig as $config )
                 $cli->output( '  ' . $user->attribute( 'name' ) );
                 $userData = $user->attribute( 'data_map' );
                 $accountData = $userData['user_account']->attribute( 'content' );
-        		$login = $accountData->attribute( 'login' );
+                $login = $accountData->attribute( 'login' );
 
-        		// we don't allow @ as first char of login, because user groups start with @ in svnaccess config file
-        		// we don't allow , anywhere in login, because it is delimits users in svnaccess config file
-        		// we don't allow : anywhere in login, because it is htpasswd seperator between login and password
-        		if ( strpos( $login, '@' ) === 0 || strpos( $login, ':' ) !== false || strpos( $login, ',' ) !== false )
-        		{
-        		    // skip this user
-        		    continue;
-        		}
+                // we don't allow @ as first char of login, because user groups start with @ in svnaccess config file
+                // we don't allow , anywhere in login, because it is delimits users in svnaccess config file
+                // we don't allow : anywhere in login, because it is htpasswd seperator between login and password
+                if ( strpos( $login, '@' ) === 0 || strpos( $login, ':' ) !== false || strpos( $login, ',' ) !== false )
+                {
+                    // skip this user
+                    continue;
+                }
 
                 if ( !$accountData->attribute( 'is_locked' ) && $accountData->attribute( 'is_enabled' ) )
                 {
@@ -131,8 +126,8 @@ foreach ( $accessConfig as $config )
                 }
             }
 
-    	    $loginArray = array_merge( $loginArray, $alwaysAddUsers );
-    	    $loginArray = array_unique( $loginArray );
+            $loginArray = array_merge( $loginArray, $alwaysAddUsers );
+            $loginArray = array_unique( $loginArray );
 
             if ( count( $loginArray ) > 0 )
             {

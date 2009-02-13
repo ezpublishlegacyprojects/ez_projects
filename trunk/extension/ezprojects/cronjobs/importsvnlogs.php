@@ -1,15 +1,11 @@
 <?php
 
-include_once( 'kernel/classes/ezcontentfunctions.php' );
-include_once( 'kernel/classes/datatypes/ezuser/ezuser.php' );
-include_once( 'kernel/classes/ezcontentobjecttreenode.php' );
-
 if ( !$isQuiet )
 {
     $cli->output( "Processing pending SVN log imports" );
 }
 
-$db =& eZDB::instance();
+$db = eZDB::instance();
 
 $rows = $db->arrayQuery( "SELECT * FROM ezpending_actions WHERE action='import_svn_log'" );
 
@@ -40,7 +36,7 @@ foreach ( $rows as $row )
                                                              'params' => array( array( 'subversion/repository', '=', $repositoryURL ) ) )
                        );
 
-       $subversionNodes =& eZContentObjectTreeNode::subTree( $params, 2 );
+       $subversionNodes = eZContentObjectTreeNode::subTreeByNodeID( $params, 2 );
 
        if ( count( $subversionNodes ) == 0 )
        {
@@ -97,7 +93,7 @@ foreach ( $rows as $row )
                 {
                     if ( trim( $value ) != '' )
                     {
-                        $authorUser =& eZUser::fetchByName( $value );
+                        $authorUser = eZUser::fetchByName( $value );
                         if ( $authorUser )
                         {
                             $attributes['author'] = $authorUser->attribute( 'contentobject_id' );

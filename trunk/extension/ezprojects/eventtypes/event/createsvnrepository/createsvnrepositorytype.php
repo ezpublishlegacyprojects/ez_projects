@@ -24,9 +24,6 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
-include_once( 'kernel/classes/ezworkflowtype.php' );
-include_once( 'kernel/classes/ezcontentobject.php' );
-
 class CreateSVNRepositoryType extends eZWorkflowEventType
 {
     function CreateSVNRepositoryType()
@@ -36,38 +33,37 @@ class CreateSVNRepositoryType extends eZWorkflowEventType
         $this->setTriggerTypes( array( 'content' => array( 'publish' => array( 'after' ) ) ) );
     }
 
-    function execute( &$process, &$event )
+    function execute( $process, $event )
     {
         $parameters = $process->attribute( 'parameter_list' );
-        $object =& eZContentObject::fetch( $parameters['object_id'] );
+        $object = eZContentObject::fetch( $parameters['object_id'] );
 
         // this is normally not needed
         // but let's add it anyway, in case the workflow event is used wrongly (= not after a multiplexer)
         if ( $object->attribute( 'class_identifier' ) != 'subversion' )
         {
             eZDebug::writeWarning( 'The object in the workflow is not a subversion object, workflow status accepted without doing anything', 'CreateSVNRepositoryType::execute' );
-            return EZ_WORKFLOW_TYPE_STATUS_ACCEPTED;
+            return eZWorkflowType::STATUS_ACCEPTED;
         }
 
-        $dataMap =& $object->attribute( 'data_map' );
+        $dataMap = $object->attribute( 'data_map' );
         // if the link to the repository is already filled in, then don't do anything
         if ( $dataMap['repository']->attribute( 'has_content' ) )
         {
-            return EZ_WORKFLOW_TYPE_STATUS_ACCEPTED;
+            return eZWorkflowType::STATUS_ACCEPTED;
         }
 
         // get the project unix name
-        $mainNode =& $object->attribute( 'main_node' );
-        $projectNode =& $mainNode->attribute( 'parent' );
+        $mainNode = $object->attribute( 'main_node' );
+        $projectNode = $mainNode->attribute( 'parent' );
 
         // if the parent is not a project (for example in the project skeleton), then skip this event
         if ( $projectNode->attribute( 'class_identifier' ) != 'project' )
         {
-            return EZ_WORKFLOW_TYPE_STATUS_ACCEPTED;
+            return eZWorkflowType::STATUS_ACCEPTED;
         }
 
-        include_once( 'lib/ezutils/classes/ezini.php' );
-        $projectsIni =& eZINI::instance( 'projects.ini' );
+        $projectsIni = eZINI::instance( 'ezprojects.ini' );
 
         $defer = ( $projectsIni->hasVariable( 'Subversion', 'Defer' ) && strtolower( trim( $projectsIni->variable( 'Subversion', 'Defer' ) ) ) == 'enabled' ) ? true : false;
 
@@ -77,10 +73,10 @@ class CreateSVNRepositoryType extends eZWorkflowEventType
         include_once( 'lib/ezutils/classes/ezsys.php' );
         if ( $defer && eZSys::isShellExecution() == false )
         {
-            return EZ_WORKFLOW_TYPE_STATUS_DEFERRED_TO_CRON_REPEAT;
+            return eZWorkflowType::STATUS_DEFERRED_TO_CRON_REPEAT;
         }
 
-        $projectData =& $projectNode->attribute( 'data_map' );
+        $projectData = $projectNode->attribute( 'data_map' );
         $unixName = $projectData['unix_name']->attribute( 'content' );
 
 
@@ -89,7 +85,7 @@ class CreateSVNRepositoryType extends eZWorkflowEventType
         $urlBase = $projectsIni->variable( 'Subversion', 'URLBase' );
         $parentPath = $projectsIni->variable( 'Subversion', 'ParentPath' );
 
-        $hooks = $projectsIni->hasVariable( 'Subversion', 'Hooks' );
+        $hooks = $projectsIni->hasVariable( 'Subversion', 'Hooks' ) ? $projectsIni->variable( 'Subversion', 'Hooks' ) : array();
 
         $success = $this->createRepository( $unixName, $parentPath, $server, $hooks );
 
@@ -98,13 +94,13 @@ class CreateSVNRepositoryType extends eZWorkflowEventType
         if ( !$success )
         {
             // repository creation failed, let's try again the next time the cron runs
-            return EZ_WORKFLOW_TYPE_STATUS_DEFERRED_TO_CRON_REPEAT;
+            return eZWorkflowType::STATUS_DEFERRED_TO_CRON_REPEAT;
         }
 
         // set link to repository
         $this->updateRepositoryURL( $object, $urlBase, $unixName );
 
-        return EZ_WORKFLOW_TYPE_STATUS_ACCEPTED;
+        return eZWorkflowType::STATUS_ACCEPTED;
     }
 
     function createRepository( $unixName, $parentPath, $server, $hooks )
@@ -114,13 +110,13 @@ class CreateSVNRepositoryType extends eZWorkflowEventType
         $commands = array();
         $commands[] = "cd $parentPath";
         $commands[] = "svnadmin create $unixName";
-        $commends[] = "chmod -R a+w $unixName";
+        $commands[] = "chmod -R a+w $unixName";
         foreach ( $hooks as $hook )
         {
             $hookPath = eZDir::path( array( $hooksDir, $hook ) );
-            $commands[] = "cp $hookPath {$unixName}/hooks/{$hook}";
+            $commands[] = "cp $hookPath {$unixName}/hooks/";
         }
-        $command = implode( '; ', $commands ) . ';';
+        $command = implode( ' && ', $commands );
 
         if ( $server )
         {
@@ -130,9 +126,9 @@ class CreateSVNRepositoryType extends eZWorkflowEventType
         return $this->executeCommand( $command );
     }
 
-    function updateRepositoryURL( &$object, $urlBase, $unixName )
+    function updateRepositoryURL( $object, $urlBase, $unixName )
     {
-        $dataMap =& $object->attribute( 'data_map' );
+        $dataMap = $object->attribute( 'data_map' );
 
         $url = $urlBase . $unixName;
 
@@ -146,6 +142,7 @@ class CreateSVNRepositoryType extends eZWorkflowEventType
 
     function executeCommand( $command )
     {
+        eZDebug::writeDebug( $command, __METHOD__ );
         exec( $command . ' 2>&1', $output, $return );
         eZDebug::writeDebug( implode( "\n", $output ), 'CreateSVNRepositoryType::executeCommand' );
         // see if command executed succesfully
@@ -160,6 +157,6 @@ class CreateSVNRepositoryType extends eZWorkflowEventType
     }
 }
 
-eZWorkflowEventType::registerType( 'createsvnrepository', 'CreateSVNRepositoryType' );
+eZWorkflowEventType::registerEventType( 'createsvnrepository', 'CreateSVNRepositoryType' );
 
 ?>
