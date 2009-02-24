@@ -1,10 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-include_once( 'kernel/classes/ezscript.php' );
-include_once( 'lib/ezutils/classes/ezcli.php' );
+require_once 'autoload.php';
 
-$cli =& eZCLI::instance();
+$cli = eZCLI::instance();
 
 $scriptSettings = array();
 $scriptSettings['description'] = 'Import Subversion logs to eZ Publish';
@@ -12,7 +11,7 @@ $scriptSettings['use-session'] = true;
 $scriptSettings['use-modules'] = true;
 $scriptSettings['use-extensions'] = true;
 
-$script =& eZScript::instance( $scriptSettings );
+$script = eZScript::instance( $scriptSettings );
 $script->startup();
 
 $config = '';
@@ -44,11 +43,11 @@ include_once( 'kernel/classes/datatypes/ezuser/ezuser.php' );
 include_once( 'kernel/classes/ezcontentobjecttreenode.php' );
 
 $params = array( 'Limitation' => array(), 'ClassFilterType' => 'include', 'ClassFilterArray' => array( 'subversion' ) );
-$subversionNodes =& eZContentObjectTreeNode::subTree( $params, 2 );
+$subversionNodes = eZContentObjectTreeNode::subTreeByNodeID( $params, 2 );
 
 foreach ( $subversionNodes as $subversionNode )
 {
-    $data =& $subversionNode->attribute( 'data_map' );
+    $data = $subversionNode->attribute( 'data_map' );
     $url = trim( $data['repository']->attribute( 'content' ) );
 
     // skip empty url
@@ -65,7 +64,7 @@ foreach ( $subversionNodes as $subversionNode )
     $cli->output( $url );
 
     $logParams = array( 'Limitation' => array(), 'ClassFilterType' => 'include', 'ClassFilterArray' => array( 'subversion_log_message' ), 'SortBy' => array( 'attribute', false, 'subversion_log_message/revision' ), 'Limit' => 1, 'Offset' => 0 );
-    $logMessages = eZContentObjectTreeNode::subTree( $logParams, $subversionNode->attribute( 'node_id' ) );
+    $logMessages = eZContentObjectTreeNode::subTreeByNodeID( $logParams, $subversionNode->attribute( 'node_id' ) );
 
     if ( count( $logMessages ) > 0 )
     {
@@ -109,7 +108,7 @@ foreach ( $subversionNodes as $subversionNode )
                     {
                         if ( trim( $value ) != '' )
                         {
-                            $authorUser =& eZUser::fetchByName( $value );
+                            $authorUser = eZUser::fetchByName( $value );
                             if ( $authorUser )
                             {
                                 $attributes['author'] = $authorUser->attribute( 'contentobject_id' );

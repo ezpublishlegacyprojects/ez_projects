@@ -1,10 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-include_once( 'kernel/classes/ezscript.php' );
-include_once( 'lib/ezutils/classes/ezcli.php' );
+require_once 'autoload.php';
 
-$cli =& eZCLI::instance();
+$cli = eZCLI::instance();
 
 $scriptSettings = array();
 $scriptSettings['description'] = 'your description of this script comes here';
@@ -12,7 +11,7 @@ $scriptSettings['use-session'] = true;
 $scriptSettings['use-modules'] = true;
 $scriptSettings['use-extensions'] = true;
 
-$script =& eZScript::instance( $scriptSettings );
+$script = eZScript::instance( $scriptSettings );
 $script->startup();
 
 $config = '';
@@ -38,7 +37,7 @@ include_once( 'kernel/classes/ezcontentobjecttreenode.php' );
 include_once( 'kernel/classes/datatypes/ezuser/ezuser.php' );
 
 $params = array( 'Limitation' => array(), 'ClassFilterType' => 'include', 'ClassFilterArray' => array( 'subversion' ) );
-$subversionNodes =& eZContentObjectTreeNode::subTree( $params, 2 );
+$subversionNodes = eZContentObjectTreeNode::subTreeByNodeID( $params, 2 );
 
 $commands = array();
 
@@ -47,7 +46,7 @@ $authorReplacements = array();
 foreach ( $subversionNodes as $subversionNode )
 {
     $authors = array();
-    $data =& $subversionNode->attribute( 'data_map' );
+    $data = $subversionNode->attribute( 'data_map' );
     $url = $data['repository']->attribute( 'content' );
 
     // skip empty url
