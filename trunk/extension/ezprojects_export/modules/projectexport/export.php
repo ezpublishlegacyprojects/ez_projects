@@ -37,7 +37,7 @@ if ( !$projectUnixName or $projectUnixName == '' )
 
 $projectUnixName = trim( $projectUnixName, '/' );
 
-$project = eZContentObjectTreeNode::fetchByURLPath( '/' . $projectUnixName );
+$project = eZContentObjectTreeNode::fetchByURLPath( $projectUnixName );
 if ( !$project )
 {
     // unexisting project
@@ -57,7 +57,7 @@ $xml = new SimpleXMLElement( $bootString );
 $xml->addAttribute( 'name', $project->attribute( 'name' ) );
 
 // Fetch leaders :
-$leadersGroup = eZContentObjectTreeNode::fetchByURLPath( '/' . $projectUnixName . '/team/leaders' );
+$leadersGroup = eZContentObjectTreeNode::fetchByURLPath(  $projectUnixName . '/team/leaders' );
 $leadersGroupXml = $xml->addChild( 'leaders' );
 
 if ( $leadersGroup )
@@ -71,7 +71,18 @@ if ( $leadersGroup )
 }
 
 // Fetch members :
+$membersGroup = eZContentObjectTreeNode::fetchByURLPath(  $projectUnixName . '/team/members' );
+$membersGroupXml = $xml->addChild( 'members' );
 
+if ( $membersGroup )
+{
+    $members = $membersGroup->attribute( 'children' );
+    foreach ( $members as $m )
+    {
+        $memberXml = $membersGroupXml->addChild( 'leader', $m->attribute( 'name' ) );
+        $memberXml->addAttribute( 'login', eZUser::fetch( $m->attribute( 'object' )->attribute( 'id' ) )->attribute( 'login' ) );
+    }
+}
 
 // Fetch latest forum activity
 
