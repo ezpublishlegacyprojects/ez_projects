@@ -28,8 +28,6 @@
 
 $projectUnixName = $Params['projectUnixName'];
 
-header( 'Content-type: text/xml' );
-
 if ( !$projectUnixName or $projectUnixName == '' )
 {
     // No valid pointer given
@@ -37,7 +35,25 @@ if ( !$projectUnixName or $projectUnixName == '' )
     eZExecution::cleanExit();
 }
 
-echo '<root></root>';
+$project = eZContentObjectTreeNode::fetchByURLPath( $projectUnixName );
+if ( !$project )
+{
+    // unexisting project
+    eZDB::checkTransactionCounter();
+    eZExecution::cleanExit();
+}
+
+header( 'Content-type: text/xml' );
+
+$bootString = <<<XML
+<?xml version='1.0' standalone='yes'?>
+<project>
+</project>
+XML;
+
+$xml = new SimpleXMLElement( $bootString );
+$xml->name = $project->attribute( 'name' );
+echo $xml->asXML();
 
 eZDB::checkTransactionCounter();
 eZExecution::cleanExit();
