@@ -35,7 +35,9 @@ if ( !$projectUnixName or $projectUnixName == '' )
     eZExecution::cleanExit();
 }
 
-$project = eZContentObjectTreeNode::fetchByURLPath( $projectUnixName );
+$projectUnixName = trim( $projectUnixName, '/' );
+
+$project = eZContentObjectTreeNode::fetchByURLPath( '/' . $projectUnixName );
 if ( !$project )
 {
     // unexisting project
@@ -52,9 +54,30 @@ $bootString = <<<XML
 XML;
 
 $xml = new SimpleXMLElement( $bootString );
-$xml->name = $project->attribute( 'name' );
-echo $xml->asXML();
+$xml->addAttribute( 'name', $project->attribute( 'name' ) );
 
+// Fetch leaders :
+$leadersGroup = eZContentObjectTreeNode::fetchByURLPath( '/' . $projectUnixName . '/team/leaders' );
+$leadersGroupXml = $xml->addChild( 'leaders' );
+
+if ( $leadersGroup )
+{
+    $leaders = $leadersGroup->attribute( 'children' );
+    foreach ( $leaders as $l )
+    {
+        $leaderXml = $leadersGroupXml->addChild( 'leader', $l->attribute( 'name' ) );
+        $leaderXml->addAttribute( 'login', eZUser::fetch( $l->attribute( 'object' )->attribute( 'id' ) )->attribute( 'login' ) );
+    }
+}
+
+// Fetch members :
+
+
+// Fetch latest forum activity
+
+
+
+echo $xml->asXML();
 eZDB::checkTransactionCounter();
 eZExecution::cleanExit();
 
