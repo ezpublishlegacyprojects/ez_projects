@@ -88,6 +88,7 @@ if ( $membersGroup )
 $forumsNode = eZContentObjectTreeNode::fetchByURLPath(  $projectUnixName . '/forum', false );
 if ( $forumsNode )
 {
+    $latestForumActivityXml = $xml->addChild( 'latestForumActivity' );
     $params = array( 'Limit'  => 1,
                      'SortBy' => array( 'published', false ) );
 
@@ -97,7 +98,7 @@ if ( $forumsNode )
         $forumMessage = $latestForumMessage[0];
         $dm = $forumMessage->attribute( 'data_map' );
 
-        $forumMessageXml = $xml->addChild( 'forumMessage' );
+        $forumMessageXml = $latestForumActivityXml->addChild( 'forumMessage' );
         // title
         $forumMessageXml->addChild( 'title',  $dm['title']->attribute( 'content' )  );
 
@@ -111,9 +112,36 @@ if ( $forumsNode )
 }
 
 
+// Fetch latest review & overall review mark
+$reviewsNode = eZContentObjectTreeNode::fetchByURLPath(  $projectUnixName . '/reviews', false );
+if ( $reviewsNode )
+{
+    $reviewsXml = $xml->addChild( 'reviews' );
+    $params = array( 'SortBy' => array( 'published', false ) );
 
-// Fetch reviews or overall review mark
+    $allReviews = eZContentObjectTreeNode::subTreeByNodeID( $params, $reviewsNode['node_id'] );
+    if ( $allReviews )
+    {
+        // extract global mark
+        $sum = 0;
+        for ( $i = 0; $i < count( $allReviews ); $i++ )
+        {
+            $r = $allReviews[$i];
+            $dm = $r->attribute( 'data_map' );
+            $sum += $dm['rating']->attribute( 'content' );
+        }
+        $avgMark = $sum / $i;
+        $reviewsXml->addChild( 'average', $avgMark );
 
+        //extract latest review
+        $latestActivityXml = $reviewsXml->addChild( 'latestReviewActivity' );
+        $dm = $allReviews[0]->attribute( 'data_map' );
+        $reviewXml = $latestActivityXml->addChild( 'review' );
+        $reviewXml->addChild( 'summary', $dm['summary']->attribute( 'content' ) );
+        $reviewXml->addChild( 'rating', $dm['rating']->attribute( 'content' ) );
+        $reviewXml->addChild( 'body', $dm['review']->attribute( 'content' ) );
+    }
+}
 
 
 echo $xml->asXML();
