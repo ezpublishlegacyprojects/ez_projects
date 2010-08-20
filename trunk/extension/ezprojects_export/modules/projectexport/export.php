@@ -102,6 +102,7 @@ if ( $forumsNode )
         $dm = $forumMessage->attribute( 'data_map' );
 
         $forumMessageXml = $latestForumActivityXml->addChild( 'forumMessage' );
+
         // title
         $forumMessageXml->addChild( 'title',  $dm['title']->attribute( 'content' )  );
 

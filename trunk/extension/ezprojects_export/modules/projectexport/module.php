@@ -30,12 +30,13 @@ $Module = array( 'name' => 'Project Export Module' );
 
 $ViewList = array();
 $ViewList['export'] = array(
-                            'script' => 'export.php',
+                            'script'     => 'export.php',
                             'ui_context' => 'read',
-                            'params' => array( 'projectUnixName', 'withLogins' )
+                            'params'     => array( 'projectUnixName', 'withLogins' ),
+                            'functions'  => array( 'export' )
                            );
 
-// $FunctionList = array();
-// $FunctionList['export'] = array();
+$FunctionList = array();
+$FunctionList['export'] = array();
 
 ?>
