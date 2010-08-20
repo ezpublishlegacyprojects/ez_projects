@@ -85,6 +85,34 @@ if ( $membersGroup )
 }
 
 // Fetch latest forum activity
+$forumsNode = eZContentObjectTreeNode::fetchByURLPath(  $projectUnixName . '/forum', false );
+if ( $forumsNode )
+{
+    $params = array( 'Limit'  => 1,
+                     'SortBy' => array( 'published', false ) );
+
+    $latestForumMessage = eZContentObjectTreeNode::subTreeByNodeID( $params, $forumsNode['node_id'] );
+    if ( $latestForumMessage[1] )
+    {
+        $forumMessage = $latestForumMessage[1];
+        $dm = $forumMessage->attribute( 'data_map' );
+
+        $forumMessageXml = $membersGroupXml->addChild( 'forumMessage' );
+        // title
+        $forumMessageXml->addChild( 'title',  $dm['title']->attribute( 'content' )  );
+
+        // message
+        $forumMessageXml->addChild( 'message',  $dm['message']->attribute( 'content' )  );
+
+        // author
+        $author = $forumMessage->atttribute( 'object' )->attribute( 'owner' );
+        $forumMessageXml->addChild( 'author', $author->attribute( 'name' )  )->addAttribute( 'login', eZUser::fetch( $author->attribute( 'object' )->attribute( 'id' ) )->attribute( 'login' ) );
+    }
+}
+
+
+
+// Fetch reviews or overall review mark
 
 
 
