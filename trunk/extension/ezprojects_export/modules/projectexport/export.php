@@ -104,7 +104,8 @@ if ( $forumsNode )
         $forumMessageXml = $latestForumActivityXml->addChild( 'forumMessage' );
 
         // title
-        $forumMessageXml->addChild( 'title',  $dm['title']->attribute( 'content' )  );
+        $content = $dm['title'] ? $dm['title']->attribute( 'content' ) : '' ;
+        $forumMessageXml->addChild( 'title',  $content  );
 
         // message
         $forumMessageXml->addChild( 'message',  $dm['message']->attribute( 'content' )  );
