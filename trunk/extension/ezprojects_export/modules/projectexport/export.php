@@ -108,7 +108,8 @@ if ( $forumsNode )
         $forumMessageXml->addChild( 'title',  $content  );
 
         // message
-        $forumMessageXml->addChild( 'message',  $dm['message']->attribute( 'content' )  );
+        $content = $dm['message'] ? $dm['message']->attribute( 'content' ) : '' ;
+        $forumMessageXml->addChild( 'message',  $content  );
 
         // author
         $author = $forumMessage->attribute( 'object' )->attribute( 'owner' );
