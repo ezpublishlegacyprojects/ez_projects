@@ -92,12 +92,12 @@ if ( $forumsNode )
                      'SortBy' => array( 'published', false ) );
 
     $latestForumMessage = eZContentObjectTreeNode::subTreeByNodeID( $params, $forumsNode['node_id'] );
-    if ( $latestForumMessage[1] )
+    if ( $latestForumMessage[0] )
     {
-        $forumMessage = $latestForumMessage[1];
+        $forumMessage = $latestForumMessage[0];
         $dm = $forumMessage->attribute( 'data_map' );
 
-        $forumMessageXml = $membersGroupXml->addChild( 'forumMessage' );
+        $forumMessageXml = $xml->addChild( 'forumMessage' );
         // title
         $forumMessageXml->addChild( 'title',  $dm['title']->attribute( 'content' )  );
 
@@ -105,8 +105,8 @@ if ( $forumsNode )
         $forumMessageXml->addChild( 'message',  $dm['message']->attribute( 'content' )  );
 
         // author
-        $author = $forumMessage->atttribute( 'object' )->attribute( 'owner' );
-        $forumMessageXml->addChild( 'author', $author->attribute( 'name' )  )->addAttribute( 'login', eZUser::fetch( $author->attribute( 'object' )->attribute( 'id' ) )->attribute( 'login' ) );
+        $author = $forumMessage->attribute( 'object' )->attribute( 'owner' );
+        $forumMessageXml->addChild( 'author', $author->attribute( 'name' )  )->addAttribute( 'login', eZUser::fetch( $author->attribute( 'id' ) )->attribute( 'login' ) );
     }
 }
 
