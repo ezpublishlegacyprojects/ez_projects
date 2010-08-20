@@ -27,6 +27,7 @@
 //
 
 $projectUnixName = $Params['projectUnixName'];
+$withLogins = (bool) $Params['withLogins'];
 
 if ( !$projectUnixName or $projectUnixName == '' )
 {
@@ -66,7 +67,8 @@ if ( $leadersGroup )
     foreach ( $leaders as $l )
     {
         $leaderXml = $leadersGroupXml->addChild( 'leader', $l->attribute( 'name' ) );
-        $leaderXml->addAttribute( 'login', eZUser::fetch( $l->attribute( 'object' )->attribute( 'id' ) )->attribute( 'login' ) );
+        if ( $withLogins )
+            $leaderXml->addAttribute( 'login', eZUser::fetch( $l->attribute( 'object' )->attribute( 'id' ) )->attribute( 'login' ) );
     }
 }
 
@@ -80,7 +82,8 @@ if ( $membersGroup )
     foreach ( $members as $m )
     {
         $memberXml = $membersGroupXml->addChild( 'leader', $m->attribute( 'name' ) );
-        $memberXml->addAttribute( 'login', eZUser::fetch( $m->attribute( 'object' )->attribute( 'id' ) )->attribute( 'login' ) );
+        if ( $withLogins )
+            $memberXml->addAttribute( 'login', eZUser::fetch( $m->attribute( 'object' )->attribute( 'id' ) )->attribute( 'login' ) );
     }
 }
 
@@ -107,7 +110,10 @@ if ( $forumsNode )
 
         // author
         $author = $forumMessage->attribute( 'object' )->attribute( 'owner' );
-        $forumMessageXml->addChild( 'author', $author->attribute( 'name' )  )->addAttribute( 'login', eZUser::fetch( $author->attribute( 'id' ) )->attribute( 'login' ) );
+        if ( $withLogins )
+            $forumMessageXml->addChild( 'author', $author->attribute( 'name' )  )->addAttribute( 'login', eZUser::fetch( $author->attribute( 'id' ) )->attribute( 'login' ) );
+        else
+            $forumMessageXml->addChild( 'author', $author->attribute( 'name' )  );
     }
 }
 

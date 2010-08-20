@@ -32,7 +32,7 @@ $ViewList = array();
 $ViewList['export'] = array(
                             'script' => 'export.php',
                             'ui_context' => 'read',
-                            'params' => array( 'projectUnixName' )
+                            'params' => array( 'projectUnixName', 'withLogins' )
                            );
 
 // $FunctionList = array();
