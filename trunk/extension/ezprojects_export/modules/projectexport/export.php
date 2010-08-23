@@ -66,7 +66,7 @@ if ( $leadersGroup )
     $leaders = $leadersGroup->attribute( 'children' );
     foreach ( $leaders as $l )
     {
-        $leaderXml = $leadersGroupXml->addChild( 'leader', $l->attribute( 'name' ) );
+        $leaderXml = $leadersGroupXml->addChild( 'user', $l->attribute( 'name' ) );
         if ( $withLogins )
             $leaderXml->addAttribute( 'login', eZUser::fetch( $l->attribute( 'object' )->attribute( 'id' ) )->attribute( 'login' ) );
     }
@@ -81,7 +81,7 @@ if ( $membersGroup )
     $members = $membersGroup->attribute( 'children' );
     foreach ( $members as $m )
     {
-        $memberXml = $membersGroupXml->addChild( 'leader', $m->attribute( 'name' ) );
+        $memberXml = $membersGroupXml->addChild( 'user', $m->attribute( 'name' ) );
         if ( $withLogins )
             $memberXml->addAttribute( 'login', eZUser::fetch( $m->attribute( 'object' )->attribute( 'id' ) )->attribute( 'login' ) );
     }
