@@ -156,6 +156,8 @@ if ( $reviewsNode )
         $reviewXml->addChild( 'summary', $dm['summary']->attribute( 'content' ) );
         $reviewXml->addChild( 'rating', $dm['rating']->attribute( 'content' ) );
         $reviewXml->addChild( 'body', $dm['review']->attribute( 'content' ) );
+        // id : for sequencing when importing on another platform. Can be stored as remote_id column on an eZ Publish instance for instance.
+        $reviewXml->addChild( 'id', $allReviews[0]->attribute( 'contentobject_id' ) );
     }
 }
 
