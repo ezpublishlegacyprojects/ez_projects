@@ -59,7 +59,7 @@ $xml->addAttribute( 'name', $project->attribute( 'name' ) );
 
 // Export description
 $dm = $project->attribute( 'data_map' );
-$descriptionXml = $xml->addChild( 'description', strip_tags( $dm['full']->toString() ) );
+$descriptionXml = $xml->addChild( 'description', strip_tags( $dm['brief']->toString() ) );
 
 // Fetch leaders :
 $leadersGroup = eZContentObjectTreeNode::fetchByURLPath(  $projectUnixName . '/team/leaders' );
