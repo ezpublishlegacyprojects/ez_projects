@@ -96,8 +96,10 @@ $forumsNode = eZContentObjectTreeNode::fetchByURLPath(  $projectUnixName . '/for
 if ( $forumsNode )
 {
     $latestForumActivityXml = $xml->addChild( 'latestForumActivity' );
-    $params = array( 'Limit'  => 1,
-                     'SortBy' => array( 'published', false ) );
+    $params = array( 'Limit'            => 1,
+                     'ClassFilterType'  => 'include',
+                     'ClassFilterArray' => array( 'forum_message' ),
+                     'SortBy'           => array( 'published', false ) );
 
     $latestForumMessage = eZContentObjectTreeNode::subTreeByNodeID( $params, $forumsNode['node_id'] );
     if ( $latestForumMessage[0] )
