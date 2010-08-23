@@ -109,11 +109,11 @@ if ( $forumsNode )
 
         // title
         $content = $dm['title'] ? $dm['title']->attribute( 'content' ) : '' ;
-        $forumMessageXml->addChild( 'title',  $content  );
+        $forumMessageXml->addChild( 'title',  $content );
 
         // message
         $content = $dm['message'] ? $dm['message']->attribute( 'content' ) : '' ;
-        $forumMessageXml->addChild( 'message',  $content  );
+        $forumMessageXml->addChild( 'message',  $content );
 
         // author
         $author = $forumMessage->attribute( 'object' )->attribute( 'owner' );
@@ -121,6 +121,9 @@ if ( $forumsNode )
             $forumMessageXml->addChild( 'author', $author->attribute( 'name' )  )->addAttribute( 'login', eZUser::fetch( $author->attribute( 'id' ) )->attribute( 'login' ) );
         else
             $forumMessageXml->addChild( 'author', $author->attribute( 'name' )  );
+
+        // id : for sequencing when importing on another platform. Can be stored as remote_id column on an eZ Publish instance for instance.
+        $forumMessageXml->addChild( 'id', $forumMessage->attribute( 'contentobject_id' ) );
     }
 }
 
