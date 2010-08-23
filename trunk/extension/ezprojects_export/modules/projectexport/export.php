@@ -57,6 +57,10 @@ XML;
 $xml = new SimpleXMLElement( $bootString );
 $xml->addAttribute( 'name', $project->attribute( 'name' ) );
 
+// Export description
+$dm = $project->attribute( 'data_map' );
+$descriptionXml = $xml->addChild( 'description', $dm['full']->attribute( 'content' ) );
+
 // Fetch leaders :
 $leadersGroup = eZContentObjectTreeNode::fetchByURLPath(  $projectUnixName . '/team/leaders' );
 $leadersGroupXml = $xml->addChild( 'leaders' );
