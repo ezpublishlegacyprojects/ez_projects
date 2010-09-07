@@ -1,9 +1,9 @@
 <?php /*
 
-[SiteAccessSettings]
-AnonymousAccessList[]=projectexport/export
+#[SiteAccessSettings]
+#AnonymousAccessList[]=projectexport/export
 
-[RoleSettings]
-PolicyOmitList=projectexport/export
+#[RoleSettings]
+#PolicyOmitList=projectexport/export
 
 */ ?>
