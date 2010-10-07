@@ -1036,13 +1036,13 @@ class eZContentObjectPackageHandler extends eZPackageHandler
         foreach( $objectNodes as $objectNode )
         {
             $realObjectNode = $this->getRealObjectNode( $objectNode );
-	    // hack present in 4.0.2
-	    // skip guest accounts object
-	    if ( $realObjectNode->attributeValue( 'remote_id' ) == 'b321fea8341d4812d30b5c1ce492bebb' )
-	    {
-	        eZDebug::writeDebug( 'guest accounts object found' );
-		continue;
-	    }
+	        // hack present in projects.ez.no 4.0.2 ez publish version
+	        // skip guest accounts object
+	        if ( $realObjectNode->attributeValue( 'remote_id' ) == 'b321fea8341d4812d30b5c1ce492bebb' )
+	        {
+	            eZDebug::writeDebug( 'guest accounts object found' );
+		        continue;
+	        }   
 
             // Cycle until we reach an element where error has occured.
             // If action has been choosen, try install this item again, else skip it.

@@ -567,7 +567,8 @@ class eZRSSExport extends eZPersistentObject
                 }
 
                 $item = $doc->createElement( 'item' );
-
+                
+                // hack present in projects.ez.no 4.0.2 ez publish version
                 // title RSS element with respective class attribute content
                 // hack maintained.
                 if ( $object->attribute( 'class_identifier' ) == 'subversion_log_message' )
