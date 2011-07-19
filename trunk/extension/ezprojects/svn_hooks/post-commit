@@ -3,4 +3,5 @@
 REPOS="$1"
 REV="$2"
 
-/usr/local/bin/php %EZ_PUBLISH_PATH%/extension/ezprojects/bin/php/post-commit.php "$REPOS" "$REV"
+# /usr/local/apache-php5/php5/bin/php /home/projects.ez.no/www5upgraded/ezpublish-4.4.0/extension/ezprojects/bin/php/post-commit.php "$REPOS" "$REV"
+/usr/bin/php /home/projects.ez.no/www5upgraded/ezpublish-4.4.0/extension/ezprojects/bin/php/post-commit.php "$REPOS" "$REV"
