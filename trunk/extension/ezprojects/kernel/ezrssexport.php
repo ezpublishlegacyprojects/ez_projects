@@ -571,15 +571,25 @@ class eZRSSExport extends eZPersistentObject
                 $item = $doc->createElement( 'item' );
 
                 // title RSS element with respective class attribute content
-                $titleContent =  $title->attribute( 'content' );
-                if ( $titleContent instanceof eZXMLText )
+                if ( $object->attribute( 'class_identifier' ) == 'subversion_log_message' )
                 {
-                    $outputHandler = $titleContent->attribute( 'output' );
-                    $itemTitleText = $outputHandler->attribute( 'output_text' );
+                    $subversionNode = $node->attribute( 'parent' );
+                    $projectNode = $subversionNode->attribute( 'parent' );
+                    $author = $dataMap['author']->attribute( 'content' );
+                    $itemTitleText = $projectNode->attribute( 'name' ) . ' rev. ' . $dataMap['revision']->attribute( 'content' ) . ' by ' . $author->attribute( 'name' );
                 }
                 else
                 {
-                    $itemTitleText = $titleContent;
+                    $titleContent =  $title->attribute( 'content' );
+                    if ( $titleContent instanceof eZXMLText )
+                    {
+                        $outputHandler = $titleContent->attribute( 'output' );
+                        $itemTitleText = $outputHandler->attribute( 'output_text' );
+                    }
+                    else
+                    {
+                        $itemTitleText = $titleContent;
+                    }
                 }
 
                 $itemTitle = $doc->createElement( 'title' );
