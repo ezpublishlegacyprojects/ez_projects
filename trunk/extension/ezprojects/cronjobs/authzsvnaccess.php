@@ -24,6 +24,8 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
+require_once 'autoload.php';
+
 include_once( 'extension/ezprojects/classes/ezauthzsvnaccessfile.php' );
 
 $projectsIni = eZINI::instance( 'ezprojects.ini' );
