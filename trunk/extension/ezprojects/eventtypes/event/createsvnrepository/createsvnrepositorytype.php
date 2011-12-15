@@ -115,6 +115,7 @@ class CreateSVNRepositoryType extends eZWorkflowEventType
         {
             $hookPath = eZDir::path( array( $hooksDir, $hook ) );
             $commands[] = "cp $hookPath {$unixName}/hooks/";
+            $commands[] = "chmod a+x {$unixName}/hooks/{$hook}";
         }
         $command = implode( ' && ', $commands );
 
