@@ -35,7 +35,7 @@ class githubFeedConsumer
 
     protected $commitLog = array();
 
-    public function __construct( $feedUrl )
+    public function __construct( githubFeedUrl $feedUrl )
     {
         $this->feedUrl = $feedUrl;
         $this->parsedFeed = ezcFeed::parse( $this->feedUrl );
