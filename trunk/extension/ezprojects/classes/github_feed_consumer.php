@@ -24,7 +24,7 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
-require 'Base/src/ezc_bootstrap.php';
+// require 'Base/src/ezc_bootstrap.php';
 
 
 class githubFeedConsumer
