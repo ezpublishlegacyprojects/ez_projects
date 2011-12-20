@@ -10,7 +10,7 @@ if ( !$isQuiet )
 $params = array( 'Limitation'       => array(),
                  'ClassFilterType'  => 'include',
                  'ClassFilterArray' => array( 'project' ),
-                 'AttributeFilter'  => array( 'project/external_url', 'like', '*github.com*' )
+                 'AttributeFilter'  => array( array( 'project/external_url', 'like', '*github.com*' ) )
 );
 
 $githubProjects = eZContentObjectTreeNode::subTreeByNodeID( $params, 2 );
