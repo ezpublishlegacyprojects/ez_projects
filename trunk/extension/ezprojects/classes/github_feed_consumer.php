@@ -49,7 +49,7 @@ class githubFeedConsumer
         {
             $itemTimestamp = $item->updated->date->getTimestamp();
 
-            if ( $itemTimestamp < $sinceTimestamp )
+            if ( isset( $sinceTimestamp ) and $itemTimestamp < $sinceTimestamp )
                 break;
 
             $commitLog[] =  array(
