@@ -1,10 +1,12 @@
 <?php
 
-// require './extension/ezprojects/classes/github_feed_consumer.php';
+require './extension/ezprojects/classes/github_feed_consumer.php';
+require './extension/ezprojects/classes/github_feed_url.php';
 
 try
 {
-    $consumer = new githubFeedConsumer( "https://github.com/ezsystems/ezpublish/commits/master.atom" );
+    $url = new githubFeedUrl( "https://github.com/ezsystems/ezpublish/" );
+    $consumer = new githubFeedConsumer( $url );
     // $commitLog = $consumer->getCommitLog( 1324076400 /* 2011-12-17 */);
     $commitLog = $consumer->getCommitLog();
 

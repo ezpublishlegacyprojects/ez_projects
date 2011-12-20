@@ -24,7 +24,7 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
-// require 'Base/src/ezc_bootstrap.php';
+require 'Base/src/ezc_bootstrap.php';
 
 
 class githubFeedConsumer
@@ -37,7 +37,7 @@ class githubFeedConsumer
 
     public function __construct( githubFeedUrl $feedUrl )
     {
-        $this->feedUrl = $feedUrl;
+        $this->feedUrl = $feedUrl->url;
         $this->parsedFeed = ezcFeed::parse( $this->feedUrl );
     }
 
