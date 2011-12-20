@@ -43,11 +43,24 @@ class githubFeedConsumer
 
     public function getCommitLog( $sinceTimestamp = null )
     {
+        $commitLog = array();
+
         foreach ( $this->parsedFeed->item as $item )
         {
+            $itemTimestamp = $item->updated->date->getTimestamp();
 
-            // if ( new DateTime( $item ) );
+            if ( $itemTimestamp < $sinceTimestamp )
+                break;
+
+            $commitLog[] =  array(
+                'published'     => $item->updated->date->getTimestamp(),
+                'author'        => $item->author[0],
+                'id'            => $item->id->id,
+                'commitMessage' => $item->content->text
+            );
         }
+
+        return $commitLog;
     }
 }
 
