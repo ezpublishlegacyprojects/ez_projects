@@ -42,7 +42,7 @@ foreach ( $githubProjects as $githubProject )
                      'Limit'            => 1
     );
 
-    $latestCommit = eZContentObjectTreeNode::subTreeByNodeID( $params, $sourceNode->attribute( 'node_id' ) );
+    $latestCommit = eZContentObjectTreeNode::subTreeByNodeID( $params, $sourceNode[0]->attribute( 'node_id' ) );
     if ( $latestCommit !== null )
     {
         $latestCommitTime = $latestCommit[0]->attribute( 'published' );
