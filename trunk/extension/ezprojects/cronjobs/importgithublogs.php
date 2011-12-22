@@ -43,7 +43,9 @@ foreach ( $githubProjects as $githubProject )
     );
 
     $latestCommit = eZContentObjectTreeNode::subTreeByNodeID( $params, $sourceNode[0]->attribute( 'node_id' ) );
-    if ( $latestCommit !== null )
+    if ( $latestCommit !== null and
+         $latestCommit[0]->attribute( 'object' ) instanceof eZContentObject
+       )
     {
         $latestCommitTime = $latestCommit[0]->attribute( 'object' )->attribute( 'published' );
     }
@@ -54,7 +56,7 @@ foreach ( $githubProjects as $githubProject )
     // Start retrieval of the commit log
     try
     {
-        $dm = $githubProject->attribute( 'data_map');
+        $dm = $githubProject->attribute( 'data_map' );
         $url = new githubFeedUrl( $dm['external_url']->attribute( 'content' ) );
         $consumer = new githubFeedConsumer( $url );
         $commitLog = $consumer->getCommitLog( $latestCommitTime );
@@ -67,7 +69,26 @@ foreach ( $githubProjects as $githubProject )
     }
 
     // Transform commit log into content objects
-var_dump( $commitLog );
+    foreach ( $commitLog as $commit )
+    {
+        $attributes = array(
+        				'revision'      => $commit['commitSHA'], // @FIXME : convert attribute to ezstring in content class (use dbattribute converter)
+                        'log'           => $commit['commitMessage'],
+                        'date'          => $commit['published'],
+                        'github_author' => $commit['author'],
+                           );
+
+        $createParams = array(
+                        'attributes'       => $attributes,
+                        'parent_node_id'   => $sourceNode[0]->attribute( 'node_id' ),
+                        'creator_id'       => 14,
+                        'class_identifier' => 'subversion_log_message',
+                        'remote_id'        => $commit['id']
+                             );
+        $githubCommitObject = eZContentFunctions::createAndPublishObject( $createParams );
+    }
+
+
 
 }
 

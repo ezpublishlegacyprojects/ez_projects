@@ -37,8 +37,8 @@ class githubFeedConsumer
 
     public function __construct( githubFeedUrl $feedUrl )
     {
-        $this->feedUrl = $feedUrl->url;
-        $this->parsedFeed = ezcFeed::parse( $this->feedUrl );
+        $this->feedUrl = $feedUrl;
+        $this->parsedFeed = ezcFeed::parse( $this->feedUrl->url );
     }
 
     public function getCommitLog( $sinceTimestamp = null )
@@ -52,10 +52,15 @@ class githubFeedConsumer
             if ( isset( $sinceTimestamp ) and $itemTimestamp < $sinceTimestamp )
                 break;
 
+            // Extract commit SHA and ID
+            $commitUri = $item->link[0]->href;
+            $commitSHA = substr( $commitUri, strlen( $this->feedUrl->commitLogBaseUrl ) -1 );
+
             $commitLog[] =  array(
                 'published'     => $item->updated->date->getTimestamp(),
                 'author'        => $item->author[0],
-                'id'            => $item->id->id,
+                'id'            => $commitUri,
+                'commitSHA'     => $commitSHA,
                 'commitMessage' => $item->content->text
             );
         }

@@ -31,9 +31,11 @@ class githubFeedUrl
 {
     const FEED_URL_PREFIX = 'https://github.com/';
     const FEED_URL_SUFFIX = '/commits/master.atom';
+    const COMMIT_LOG_URL_SUFFIX = '/commits/';
 
     protected $candidateUrl = null;
     public $url;
+    public $commitLogBaseUrl;
 
     public function __construct( $candidateUrl )
     {
@@ -73,6 +75,7 @@ class githubFeedUrl
             throw new Exception( "Malformed candidate URL. It is a github one, but no repository name is present." );
 
         $this->url = static::FEED_URL_PREFIX . $account . "/" . $repository . static::FEED_URL_SUFFIX;
+        $this->commitLogBaseUrl = static::FEED_URL_PREFIX . $account . "/" . $repository . static::COMMIT_LOG_URL_SUFFIX;
     }
 }
 
