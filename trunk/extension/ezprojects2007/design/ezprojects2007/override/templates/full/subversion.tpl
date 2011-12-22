@@ -11,7 +11,23 @@
 </div>
 
 <div class="attribute-long">
-{if $node.object.data_map.repository.has_content}
+{if $node.object.data_map.external_url.content|isgithubrepo()}
+<p>
+This project is hosted on Github.com. Fork, clone, make loads of pull-requests, and celebrate here : 
+<a href="{$node.object.data_map.external_url.content}" target="_blank">{$node.object.data_map.external_url.content}</a>
+</p>
+<p>
+	<em>
+	New to git and Github.com ? <br /> 
+	Check this out first : <a href="http://help.github.com/" target="_blank">http://help.github.com/</a>
+	</em>
+</p> 
+<p>
+	<em>
+	Next step : learn the eZ Publish + github FU : <a href="http://share.ez.no/learn/ez-publish/how-to-contribute-to-ez-publish-using-git">How to contribute to eZ Publish using Git</a>
+	</em>
+</p>
+{elseif $node.object.data_map.repository.has_content}
 <p>You can anonymously check out the source code released by this project from its Subversion repository:</p>
 <code>svn checkout <a href="{$node.object.data_map.repository.content}">{$node.object.data_map.repository.content}</a></code>
 <p>To be able to commit changes to the project's repository, you need to be a member of the project.</p>
@@ -48,7 +64,7 @@ The repository is being initialized. Please visit this page again in a few minut
                                   "compare[]=%2F@", $log.data_map.revision.content)}
 
     {/if}
-    <li><a href={$log.url_alias|ezurl}>{$log.data_map.revision.content|shorten( 5, '' )}</a> on {$log.data_map.date.content.timestamp|l10n( shortdatetime )} by {if $is_github_log_message}{attribute_view_gui attribute=$log.data_map.github_author}{else}{attribute_view_gui attribute=$log.data_map.author}{/if} [<a href="{$diff_url}" {if $is_github_log_message}target="_blank"{/if}>{if $is_github_log_message}Diff{else}WebSVN diff{/if}</a>]</li>
+    <li><a href={$log.url_alias|ezurl}>{$log.data_map.revision.content|shorten( 5, '' )}</a> on {$log.data_map.date.content.timestamp|l10n( shortdatetime )} by {if $is_github_log_message}{$log.data_map.github_author.content|wash|autolink}{else}{attribute_view_gui attribute=$log.data_map.author}{/if} [<a href="{$diff_url}" {if $is_github_log_message}target="_blank"{/if}>{if $is_github_log_message}Diff{else}WebSVN diff{/if}</a>]</li>
     {undef $diff_url}
     {/foreach}
     </ul>

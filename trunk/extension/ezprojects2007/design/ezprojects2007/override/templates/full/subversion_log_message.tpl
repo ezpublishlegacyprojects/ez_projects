@@ -25,7 +25,7 @@
 
 {/if}
 
-<p>Committed on {$node.data_map.date.content.timestamp|l10n( shortdatetime )} by {if $is_github_log_message}{attribute_view_gui attribute=$node.data_map.github_author}{else}{attribute_view_gui attribute=$node.data_map.author}{/if} [<a href="{$diff_url}" {if $is_github_log_message}target="_blank"{/if}>{if $is_github_log_message}Diff{else}WebSVN diff{/if}</a>]</p>
+<p>Committed on {$node.data_map.date.content.timestamp|l10n( shortdatetime )} by {if $is_github_log_message}{$node.data_map.github_author.content|wash|autolink}{else}{attribute_view_gui attribute=$node.data_map.author}{/if} [<a href="{$diff_url}" {if $is_github_log_message}target="_blank"{/if}>{if $is_github_log_message}Diff{else}WebSVN diff{/if}</a>]</p>
 
 {undef $diff_url}
 
