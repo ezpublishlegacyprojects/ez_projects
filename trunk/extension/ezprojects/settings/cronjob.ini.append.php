@@ -25,4 +25,8 @@ Scripts[]=exportrepositorylist.php
 Scripts[]
 Scripts[]=importsvnlogs.php
 
+[CronjobPart-importgithublogs]
+Scripts[]
+Scripts[]=importgithublogs.php
+
 */ ?>
