@@ -54,15 +54,11 @@
 </div>
 
 <p>
-    <em>
     New to git and Github.com ? <br /> 
     Check this out first : <a href="http://help.github.com/" target="_blank">http://help.github.com/</a>
-    </em>
 </p> 
 <p>
-    <em>
     Next step : learn the eZ Publish + github FU : <a href="http://share.ez.no/learn/ez-publish/how-to-contribute-to-ez-publish-using-git">How to contribute to eZ Publish using Git</a>
-    </em>
 </p>
 {else}
 <div class="attribute-heading">

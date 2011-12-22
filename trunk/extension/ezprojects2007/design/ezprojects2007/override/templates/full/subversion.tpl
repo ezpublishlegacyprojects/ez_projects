@@ -13,8 +13,9 @@
 <div class="attribute-long">
 {def $is_github_project=$node.parent.object.data_map.external_url.content|isgithubrepo()}
 {if $is_github_project}
-<p>This project is hosted on Github.com. Fork, clone, make loads of pull-requests, and celebrate here : </p>
-<p><a href="{$node.parent.object.data_map.external_url.content}" target="_blank">{$node.parent.object.data_map.external_url.content}</a></p>
+<p>This project is hosted on Github.com.</p>
+<p> Fork, clone, make loads of pull-requests, and celebrate here : 
+<a href="{$node.parent.object.data_map.external_url.content}" target="_blank">{$node.parent.object.data_map.external_url.content}</a></p>
 {elseif $node.object.data_map.repository.has_content}
 <p>You can anonymously check out the source code released by this project from its Subversion repository:</p>
 <code>svn checkout <a href="{$node.object.data_map.repository.content}">{$node.object.data_map.repository.content}</a></code>
@@ -76,15 +77,11 @@ The repository is being initialized. Please visit this page again in a few minut
 </div>
 
 <p>
-    <em>
     New to git and Github.com ? <br /> 
     Check this out first : <a href="http://help.github.com/" target="_blank">http://help.github.com/</a>
-    </em>
 </p> 
 <p>
-    <em>
     Next step : learn the eZ Publish + github FU : <a href="http://share.ez.no/learn/ez-publish/how-to-contribute-to-ez-publish-using-git">How to contribute to eZ Publish using Git</a>
-    </em>
 </p>
 {else}
 <div class="attribute-heading">
