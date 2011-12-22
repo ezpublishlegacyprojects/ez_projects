@@ -10,21 +10,31 @@
     <h1>Revision {$node.name|wash}</h1>
 </div>
 
-{def $websvn_diff_url=concat( "http://websvn.projects.ez.no/wsvn/",
-                              $node.parent.parent.data_map.unix_name.content,
+{def $is_github_log_message=$node.object.remote_id|contains( 'github.com' )}
+{if $is_github_log_message}
+    {def $diff_url=$node.object.remote_id}                                      
+{else}
+    {def $diff_url=concat( "http://websvn.projects.ez.no/wsvn/",
+                              $node.parent.data_map.unix_name.content,
                               "?",
                               "op=comp",
                               "&",
-                              "compare[]=%2F@", $node.object.data_map.revision.content|dec,
+                              "compare[]=%2F@", $node.data_map.revision.content|dec,
                               "&",
-                              "compare[]=%2F@", $node.object.data_map.revision.content)}
+                              "compare[]=%2F@", $node.data_map.revision.content)}
 
-<p>Committed on {$node.object.data_map.date.content.timestamp|l10n( shortdatetime )} by {attribute_view_gui attribute=$node.object.data_map.author} [<a href="{$websvn_diff_url}">WebSVN diff</a>]</p>
+{/if}
 
-{undef $websvn_diff_url}
+<p>Committed on {$node.data_map.date.content.timestamp|l10n( shortdatetime )} by {if $is_github_log_message}{attribute_view_gui attribute=$node.data_map.github_author}{else}{attribute_view_gui attribute=$node.data_map.author}{/if} [<a href="{$diff_url}" {if $is_github_log_message}target="_blank"{/if}>{if $is_github_log_message}Diff{else}WebSVN diff{/if}</a>]</p>
+
+{undef $diff_url}
 
 <div class="attribute-long">
-{attribute_view_gui attribute=$node.object.data_map.log}
+{if $is_github_log_message}
+    {$node.object.data_map.log.content}
+{else}
+    {attribute_view_gui attribute=$node.object.data_map.log}
+{/if}
 </div>
 
 </div>
