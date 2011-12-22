@@ -48,6 +48,23 @@
 <div class="template-module content-view-sidebar">
 <div class="template-object class-subversion_log_message">
 
+{if $is_github_log_message}
+<div class="attribute-heading">
+    <h2 class="bullet">Useful git and Github resources</h2>
+</div>
+
+<p>
+    <em>
+    New to git and Github.com ? <br /> 
+    Check this out first : <a href="http://help.github.com/" target="_blank">http://help.github.com/</a>
+    </em>
+</p> 
+<p>
+    <em>
+    Next step : learn the eZ Publish + github FU : <a href="http://share.ez.no/learn/ez-publish/how-to-contribute-to-ez-publish-using-git">How to contribute to eZ Publish using Git</a>
+    </em>
+</p>
+{else}
 <div class="attribute-heading">
     <h2 class="bullet">Useful Subversion links</h2>
 </div>
@@ -57,6 +74,7 @@
     <li><a href="http://svnbook.red-bean.com/">Version Control with Subversion: a free book</a></li>
     <li><a href="http://subversion.tigris.org/links.html#clients">List of links to Subversion GUI clients and plugins</a></li>
 </ul>
+{/if}
 
 </div>
 </div>

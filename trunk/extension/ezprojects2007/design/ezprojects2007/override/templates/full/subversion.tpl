@@ -11,24 +11,10 @@
 </div>
 
 <div class="attribute-long">
-{* debug-log var=$node.object.data_map.external_url.content|isgithubrepo() msg="$node.object.data_map.external_url.content|isgithubrepo()" *}
-<span style="display:none;">{$node.parent.object.data_map.external_url|attribute( 'show', 2 )}</span>
-{if $node.parent.object.data_map.external_url.content|isgithubrepo()}
-<p>
-This project is hosted on Github.com. Fork, clone, make loads of pull-requests, and celebrate here : 
-<a href="{$node.parent.object.data_map.external_url.content}" target="_blank">{$node.parent.object.data_map.external_url.content}</a>
-</p>
-<p>
-	<em>
-	New to git and Github.com ? <br /> 
-	Check this out first : <a href="http://help.github.com/" target="_blank">http://help.github.com/</a>
-	</em>
-</p> 
-<p>
-	<em>
-	Next step : learn the eZ Publish + github FU : <a href="http://share.ez.no/learn/ez-publish/how-to-contribute-to-ez-publish-using-git">How to contribute to eZ Publish using Git</a>
-	</em>
-</p>
+{def $is_github_project=$node.parent.object.data_map.external_url.content|isgithubrepo()}
+{if $is_github_project}
+<p>This project is hosted on Github.com. Fork, clone, make loads of pull-requests, and celebrate here : </p>
+<p><a href="{$node.parent.object.data_map.external_url.content}" target="_blank">{$node.parent.object.data_map.external_url.content}</a></p>
 {elseif $node.object.data_map.repository.has_content}
 <p>You can anonymously check out the source code released by this project from its Subversion repository:</p>
 <code>svn checkout <a href="{$node.object.data_map.repository.content}">{$node.object.data_map.repository.content}</a></code>
@@ -84,7 +70,23 @@ The repository is being initialized. Please visit this page again in a few minut
 <div class="template-design area-sidebar-normal">
 <div class="template-module content-view-sidebar">
 <div class="template-object class-subversion">
+{if $is_github_project}
+<div class="attribute-heading">
+    <h2 class="bullet">Useful git and Github resources</h2>
+</div>
 
+<p>
+    <em>
+    New to git and Github.com ? <br /> 
+    Check this out first : <a href="http://help.github.com/" target="_blank">http://help.github.com/</a>
+    </em>
+</p> 
+<p>
+    <em>
+    Next step : learn the eZ Publish + github FU : <a href="http://share.ez.no/learn/ez-publish/how-to-contribute-to-ez-publish-using-git">How to contribute to eZ Publish using Git</a>
+    </em>
+</p>
+{else}
 <div class="attribute-heading">
     <h2 class="bullet">Useful Subversion links</h2>
 </div>
@@ -94,6 +96,7 @@ The repository is being initialized. Please visit this page again in a few minut
     <li><a href="http://svnbook.red-bean.com/">Version Control with Subversion: a free book</a></li>
     <li><a href="http://subversion.tigris.org/links.html#clients">List of links to Subversion GUI clients and plugins</a></li>
 </ul>
+{/if}
 
 </div>
 </div>
