@@ -44,7 +44,7 @@ The repository is being initialized. Please visit this page again in a few minut
             'parent_node_id', $node.node_id,
             'class_filter_type', 'include',
             'class_filter_array', array( 'subversion_log_message' ),
-            'sort_by', array( 'modified', false() ),
+            'sort_by', array( 'published', false() ),
             'limit', 15,
             'offset', 0
     ))}
