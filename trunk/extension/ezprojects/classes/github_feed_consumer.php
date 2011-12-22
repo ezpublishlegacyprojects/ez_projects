@@ -55,10 +55,12 @@ class githubFeedConsumer
             // Extract commit SHA and ID
             $commitUri = $item->link[0]->href;
             $commitSHA = substr( $commitUri, strlen( $this->feedUrl->commitLogBaseUrl ) -1 );
+            $author = $item->author[0]->name;
+            $author .= isset( $item->author[0]->uri ) ? " ( " . $item->author[0]->uri . " )" : "" ;
 
             $commitLog[] =  array(
                 'published'     => $item->updated->date->getTimestamp(),
-                'author'        => $item->author[0],
+                'author'        => $author,
                 'id'            => $commitUri,
                 'commitSHA'     => $commitSHA,
                 'commitMessage' => $item->content->text

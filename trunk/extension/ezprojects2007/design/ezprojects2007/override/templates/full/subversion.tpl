@@ -28,13 +28,15 @@ The repository is being initialized. Please visit this page again in a few minut
             'parent_node_id', $node.node_id,
             'class_filter_type', 'include',
             'class_filter_array', array( 'subversion_log_message' ),
-            'sort_by', array( 'attribute', false(), 'subversion_log_message/revision' ),
-            'limit', 10,
+            'sort_by', array( 'attribute', false(), 'modified' ),
+            'limit', 15,
             'offset', 0
     ))}
     <ul>
     {foreach $logs as $log}
-    {def $websvn_diff_url=concat( "http://websvn.projects.ez.no/wsvn/",
+    {def $is_github_log_message=$log.object.remote_id|contains( 'github.com' )}
+    {if $is_github_log_message}
+        {def $diff_url=concat( "http://websvn.projects.ez.no/wsvn/",
                                   $node.parent.data_map.unix_name.content,
                                   "?",
                                   "op=comp",
@@ -42,8 +44,11 @@ The repository is being initialized. Please visit this page again in a few minut
                                   "compare[]=%2F@", $log.data_map.revision.content|dec,
                                   "&",
                                   "compare[]=%2F@", $log.data_map.revision.content)}
-    <li><a href={$log.url_alias|ezurl}>{$log.data_map.revision.content}</a> on {$log.data_map.date.content.timestamp|l10n( shortdatetime )} by {attribute_view_gui attribute=$log.data_map.author} [<a href="{$websvn_diff_url}">WebSVN diff</a>]</li>
-    {undef $websvn_diff_url}
+    {else}
+        {def $diff_url=$log.object.remote_id}                                  
+    {/if}
+    <li><a href={$log.url_alias|ezurl}>{$log.data_map.revision.content|shorten( 5 )}</a> on {$log.data_map.date.content.timestamp|l10n( shortdatetime )} by {attribute_view_gui attribute=$log.data_map.author} [<a href="{$diff_url}">{if $is_github_log_message}Diff{else}WebSVN diff{/if}</a>]</li>
+    {undef $diff_url}
     {/foreach}
     </ul>
     {/let}
