@@ -36,6 +36,8 @@ The repository is being initialized. Please visit this page again in a few minut
     {foreach $logs as $log}
     {def $is_github_log_message=$log.object.remote_id|contains( 'github.com' )}
     {if $is_github_log_message}
+        {def $diff_url=$log.object.remote_id}                                      
+    {else}
         {def $diff_url=concat( "http://websvn.projects.ez.no/wsvn/",
                                   $node.parent.data_map.unix_name.content,
                                   "?",
@@ -44,10 +46,9 @@ The repository is being initialized. Please visit this page again in a few minut
                                   "compare[]=%2F@", $log.data_map.revision.content|dec,
                                   "&",
                                   "compare[]=%2F@", $log.data_map.revision.content)}
-    {else}
-        {def $diff_url=$log.object.remote_id}                                  
+
     {/if}
-    <li><a href={$log.url_alias|ezurl}>{$log.data_map.revision.content|shorten( 5 )}</a> on {$log.data_map.date.content.timestamp|l10n( shortdatetime )} by {attribute_view_gui attribute=$log.data_map.author} [<a href="{$diff_url}">{if $is_github_log_message}Diff{else}WebSVN diff{/if}</a>]</li>
+    <li><a href={$log.url_alias|ezurl}>{$log.data_map.revision.content|shorten( 5, '' )}</a> on {$log.data_map.date.content.timestamp|l10n( shortdatetime )} by {if $is_github_log_message}{attribute_view_gui attribute=$log.data_map.github_author}{else}{attribute_view_gui attribute=$log.data_map.author}{/if} [<a href="{$diff_url}">{if $is_github_log_message}Diff{else}WebSVN diff{/if}</a>]</li>
     {undef $diff_url}
     {/foreach}
     </ul>
