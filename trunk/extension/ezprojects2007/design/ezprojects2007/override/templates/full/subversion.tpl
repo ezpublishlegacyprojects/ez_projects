@@ -1,9 +1,10 @@
 {* Full view for article *}
+{def $is_github_project=$node.parent.object.data_map.external_url.content|isgithubrepo()}
 
 {* Start main part *}
 <div class="template-design area-main-normal">
 <div class="template-module content-view-full">
-<div class="template-object class-subversion">
+<div class="template-object class-subversion {if $is_github_project}fork-me{/if}">
 
 {* Header *}
 <div class="attribute-heading">
@@ -11,7 +12,6 @@
 </div>
 
 <div class="attribute-long">
-{def $is_github_project=$node.parent.object.data_map.external_url.content|isgithubrepo()}
 {if $is_github_project}
 <p>This project is hosted on Github.com.</p>
 <p> Fork, clone, make loads of pull-requests, and celebrate here : 
