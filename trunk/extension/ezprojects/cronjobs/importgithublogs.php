@@ -18,6 +18,8 @@ $githubProjects = eZContentObjectTreeNode::subTreeByNodeID( $params, 2 );
 
 foreach ( $githubProjects as $githubProject )
 {
+    $cli->output( "== Project : {$githubProject->attribute( 'name' )} \n" );
+
     // spot the "Source" node
     $params = array( 'Limitation'       => array(),
                      'ClassFilterType'  => 'include',
@@ -34,7 +36,7 @@ foreach ( $githubProjects as $githubProject )
         continue;
     }
 
-    // Find the latest update :
+    // Find the latest update, used to filter out the already imported commits :
     $params = array( 'Limitation'       => array(),
                      'ClassFilterType'  => 'include',
                      'ClassFilterArray' => array( 'subversion_log_message' ),
@@ -72,7 +74,7 @@ foreach ( $githubProjects as $githubProject )
     foreach ( $commitLog as $commit )
     {
         $attributes = array(
-        				'revision'      => $commit['commitSHA'], // @FIXME : convert attribute to ezstring in content class (use dbattribute converter)
+        				'revision'      => $commit['commitSHA'],
                         'log'           => $commit['commitMessage'],
                         'date'          => $commit['published'],
                         'github_author' => $commit['author'],
@@ -85,14 +87,17 @@ foreach ( $githubProjects as $githubProject )
                         'class_identifier' => 'subversion_log_message',
                         'remote_id'        => $commit['id']
                              );
+
         $githubCommitObject = eZContentFunctions::createAndPublishObject( $createParams );
+
+        $message = "Successfully imported commit {$commit['commitSHA']} in project '{$githubProject->attribute( 'name' )}'.";
+        $cli->output( $message . "\n" );
     }
-
-
-
+    $cli->output( "\n" );
 }
 
-
-
-
+if ( !$isQuiet )
+{
+    $cli->output( "Finished importing pending Github commit log." );
+}
 ?>
