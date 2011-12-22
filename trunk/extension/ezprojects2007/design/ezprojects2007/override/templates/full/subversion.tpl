@@ -48,7 +48,7 @@ The repository is being initialized. Please visit this page again in a few minut
                                   "compare[]=%2F@", $log.data_map.revision.content)}
 
     {/if}
-    <li><a href={$log.url_alias|ezurl}>{$log.data_map.revision.content|shorten( 5, '' )}</a> on {$log.data_map.date.content.timestamp|l10n( shortdatetime )} by {if $is_github_log_message}{attribute_view_gui attribute=$log.data_map.github_author}{else}{attribute_view_gui attribute=$log.data_map.author}{/if} [<a href="{$diff_url}">{if $is_github_log_message}Diff{else}WebSVN diff{/if}</a>]</li>
+    <li><a href={$log.url_alias|ezurl}>{$log.data_map.revision.content|shorten( 5, '' )}</a> on {$log.data_map.date.content.timestamp|l10n( shortdatetime )} by {if $is_github_log_message}{attribute_view_gui attribute=$log.data_map.github_author}{else}{attribute_view_gui attribute=$log.data_map.author}{/if} [<a href="{$diff_url}" {if $is_github_log_message}target="_blank"{/if}>{if $is_github_log_message}Diff{else}WebSVN diff{/if}</a>]</li>
     {undef $diff_url}
     {/foreach}
     </ul>
