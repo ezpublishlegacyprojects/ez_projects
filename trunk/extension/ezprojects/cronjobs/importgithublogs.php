@@ -18,7 +18,7 @@ $githubProjects = eZContentObjectTreeNode::subTreeByNodeID( $params, 2 );
 
 foreach ( $githubProjects as $githubProject )
 {
-    $cli->output( "== Project : {$githubProject->attribute( 'name' )} \n" );
+    $cli->output( "== Project : {$githubProject->attribute( 'name' )}" );
 
     // spot the "Source" node
     $params = array( 'Limitation'       => array(),
@@ -46,7 +46,8 @@ foreach ( $githubProjects as $githubProject )
 
     $latestCommit = eZContentObjectTreeNode::subTreeByNodeID( $params, $sourceNode[0]->attribute( 'node_id' ) );
     if ( $latestCommit !== null and
-         $latestCommit[0]->attribute( 'object' ) instanceof eZContentObject
+         isset( $latestCommit[0] ) and
+         isset( $latestCommit[0]->attribute( 'object' ) )
        )
     {
         $latestCommitTime = $latestCommit[0]->attribute( 'object' )->attribute( 'published' );
@@ -65,7 +66,7 @@ foreach ( $githubProjects as $githubProject )
     }
     catch ( Exception $e)
     {
-        $cli->error( $e->getMessage() . "\n" );
+        $cli->error( $e->getMessage() );
         eZDebug::writeError( $e->getMessage(), __METHOD__ );
         continue;
     }
@@ -91,7 +92,7 @@ foreach ( $githubProjects as $githubProject )
         $githubCommitObject = eZContentFunctions::createAndPublishObject( $createParams );
 
         $message = "Successfully imported commit {$commit['commitSHA']} in project '{$githubProject->attribute( 'name' )}'.";
-        $cli->output( $message . "\n" );
+        $cli->output( $message );
     }
     $cli->output( "\n" );
 }
