@@ -46,8 +46,8 @@ foreach ( $githubProjects as $githubProject )
 
     $latestCommit = eZContentObjectTreeNode::subTreeByNodeID( $params, $sourceNode[0]->attribute( 'node_id' ) );
     if ( $latestCommit !== null and
-         isset( $latestCommit[0] ) and
-         isset( $latestCommit[0]->attribute( 'object' ) )
+         !empty( $latestCommit ) and
+         isset( $latestCommit[0] )
        )
     {
         $latestCommitTime = $latestCommit[0]->attribute( 'object' )->attribute( 'published' );
