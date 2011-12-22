@@ -12,11 +12,11 @@
 
 <div class="attribute-long">
 {* debug-log var=$node.object.data_map.external_url.content|isgithubrepo() msg="$node.object.data_map.external_url.content|isgithubrepo()" *}
-<span style="display:none;">{$node.object.data_map.external_url|attribute( 'show', 2 )}</span>
-{if $node.object.data_map.external_url.content|isgithubrepo()}
+<span style="display:none;">{$node.parent.object.data_map.external_url|attribute( 'show', 2 )}</span>
+{if $node.parent.object.data_map.external_url.content|isgithubrepo()}
 <p>
 This project is hosted on Github.com. Fork, clone, make loads of pull-requests, and celebrate here : 
-<a href="{$node.object.data_map.external_url.content}" target="_blank">{$node.object.data_map.external_url.content}</a>
+<a href="{$node.parent.object.data_map.external_url.content}" target="_blank">{$node.parent.object.data_map.external_url.content}</a>
 </p>
 <p>
 	<em>
