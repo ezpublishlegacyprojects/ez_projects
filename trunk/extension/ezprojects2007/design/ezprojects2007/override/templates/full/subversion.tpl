@@ -33,7 +33,7 @@ The repository is being initialized. Please visit this page again in a few minut
             'parent_node_id', $node.node_id,
             'class_filter_type', 'include',
             'class_filter_array', array( 'subversion_log_message' ),
-            'sort_by', array( 'published', false() ),
+            'sort_by', array( 'attribute', false(), 'subversion_log_message/date' ),
             'limit', 15,
             'offset', 0
     ))}
