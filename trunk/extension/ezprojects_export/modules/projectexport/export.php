@@ -160,6 +160,12 @@ if ( $reviewsNode )
         $reviewXml->addChild( 'body', $dm['review']->attribute( 'content' ) );
         // id : for sequencing when importing on another platform. Can be stored as remote_id column on an eZ Publish instance for instance.
         $reviewXml->addChild( 'id', $allReviews[0]->attribute( 'contentobject_id' ) );
+        // author
+        $author = $allReviews[0]->attribute( 'object' )->attribute( 'owner' );
+        if ( $withLogins )
+            $reviewXml->addChild( 'author', $author->attribute( 'name' )  )->addAttribute( 'login', eZUser::fetch( $author->attribute( 'id' ) )->attribute( 'login' ) );
+        else
+            $reviewXml->addChild( 'author', $author->attribute( 'name' )  );
     }
 }
 
