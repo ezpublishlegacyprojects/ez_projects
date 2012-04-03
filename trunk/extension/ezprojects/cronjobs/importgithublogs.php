@@ -89,10 +89,17 @@ foreach ( $githubProjects as $githubProject )
                         'remote_id'        => $commit['id']
                              );
 
-        $githubCommitObject = eZContentFunctions::createAndPublishObject( $createParams );
-
-        $message = "Successfully imported commit {$commit['commitSHA']} in project '{$githubProject->attribute( 'name' )}'.";
-        $cli->output( $message );
+        try
+        {
+            $githubCommitObject = eZContentFunctions::createAndPublishObject( $createParams );
+            $message = "Successfully imported commit {$commit['commitSHA']} in project '{$githubProject->attribute( 'name' )}'.";
+            $cli->output( $message );
+        }
+        catch ( Exception $e)
+        {
+            $message = "Exception when importing commit {$commit['commitSHA']} in project '{$githubProject->attribute( 'name' )}' : {$e->getMessage()}.";
+            $cli->output( $message );
+        }
     }
     $cli->output( "\n" );
 }
