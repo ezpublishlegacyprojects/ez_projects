@@ -26,25 +26,47 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
-$Module = array( 'name' => 'Project Export Module' );
+$reviewObjectId = $Params['reviewObjectId'];
+$withLogins = true;
 
-$ViewList = array();
-$ViewList['export'] = array(
-                            'script'     => 'export.php',
-                            'ui_context' => 'read',
-                            'params'     => array( 'projectUnixName', 'withLogins' ),
-                            'functions'  => array( 'export' )
-                           );
+if ( !$reviewObjectId or $reviewObjectId == '' )
+{
+    // No valid pointer given
+    eZDB::checkTransactionCounter();
+    eZExecution::cleanExit();
+}
 
-$ViewList['exportreview'] = array(
-        'script'     => 'exportreview.php',
-        'ui_context' => 'read',
-        'params'     => array( 'reviewObjectId' ),
-        'functions'  => array( 'exportreview' )
-);
+$reviewObjectId = trim( $reviewObjectId, '/' );
 
-$FunctionList = array();
-$FunctionList['export'] = array();
-$FunctionList['exportreview'] = array();
+$review = eZContentObject::fetch( $reviewObjectId );
+if ( !$review )
+{
+    // unexisting review
+    eZDB::checkTransactionCounter();
+    eZExecution::cleanExit();
+}
+
+header( 'Content-type: text/xml' );
+
+$bootString = <<<XML
+<?xml version='1.0' standalone='yes'?>
+<review>
+</review>
+XML;
+
+$xml = new SimpleXMLElement( $bootString );
+$xml->addAttribute( 'object_id', $review->attribute( 'id' ) );
+
+// Display author of the review
+$author = $review->attribute( 'owner' );
+if ( $withLogins )
+    $xml->addChild( 'author', $author->attribute( 'name' )  )->addAttribute( 'login', eZUser::fetch( $author->attribute( 'id' ) )->attribute( 'login' ) );
+else
+    $xml->addChild( 'author', $author->attribute( 'name' )  );
+
+
+echo $xml->asXML();
+eZDB::checkTransactionCounter();
+eZExecution::cleanExit();
 
 ?>
