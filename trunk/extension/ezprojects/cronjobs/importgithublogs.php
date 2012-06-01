@@ -89,6 +89,17 @@ foreach ( $githubProjects as $githubProject )
                         'remote_id'        => $commit['id']
                              );
 
+        // Check whether the commit was not already imported.
+        // @note : added after the first months of trial of this RSS-based import : a duplicate entry
+        // cause the import to fail from time to time ( Fatal Error ), halting the import.
+        $existingCommitObjects = eZContentObject::fetchByRemoteID( $createParams['remote_id'], false );
+        if ( !empty( $existingCommitObjects ) )
+        {
+            $message = "Skipping : commit already imported, found in eZ Publish's content base with the following remote ID : {$createParams['remote_id']}.";
+            $cli->output( $message );
+            continue;
+        }
+
         try
         {
             $githubCommitObject = eZContentFunctions::createAndPublishObject( $createParams );
