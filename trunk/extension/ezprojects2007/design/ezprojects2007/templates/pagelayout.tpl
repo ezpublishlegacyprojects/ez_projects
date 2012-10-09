@@ -142,7 +142,8 @@
 <!-- User menu content: START -->
 <ul>
     {section show=$current_user.is_logged_in|not}
-        <li><a href="http://auth.ez.no/user/register">{"Register new user"|i18n( "ezno" )}</a></li>
+        <li><a href={"/user/login"|ezurl}>{"Become a member of the eZ Community"|i18n( "ezno" )}</a></li>
+        <li><a href={"/user/forgotpassword"|ezurl}>{"Lost password?"|i18n( "ezno" )}</a></li>
     {section-else}
         <li><a href={"/notification/settings"|ezurl}>{'Notification settings'|i18n( 'ezno' )}</a></li>
         <li><a href={"/collaboration/view/summary"|ezurl}>{'Collaboration'|i18n( 'ezno' )}</a></li>
