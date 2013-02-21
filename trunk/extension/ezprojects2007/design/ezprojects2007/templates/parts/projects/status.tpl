@@ -8,6 +8,9 @@
 {case match=2}
     {set status='Alpha'}
 {/case}
+{case match=3}
+    {set status='Planning'}
+{/case}
 {case}
     {set status='Stable'}
 {/case}
