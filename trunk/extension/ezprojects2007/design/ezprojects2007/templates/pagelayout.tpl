@@ -279,7 +279,7 @@
 <div id="page-width6">
 <div id="footer">
 
-<address>Powered by eZ Publish&reg; Content Management System.</address>
+<address>Powered by <a href="http://ez.no/ezpublish" title="eZ Publish Content Management System">eZ Publish&reg; Content Management System.</a></address>
 <address>Copyright &copy; 2007-2011 eZ Systems AS (except where otherwise noted). All rights reserved.</address>
 </div>
 </div>
